@@ -11,24 +11,37 @@ from selenium.webdriver.support.ui import WebDriverWait
 class Spider(object):
 	def __init__(self, url, parser):
 		self.status = "ready"
-		self.driver = WebDriver.Chrome()
+		options = WebDriver.ChromeOptions()
+		options.add_argument('headless')
+		self.driver = WebDriver.Chrome(chrome_options=options)
 		self.url = url
 		self.parser = parser
+		self.redo = False
 	def go(self, actions):
 		self.driver.get(self.url)
 		self.status ="go"
 		for action in actions:
-			try:
-				action[2](self.driver.find_element(action[0], action[1]))
-				action[3](self)
-			except:
-				self.status == "stop"
-			if self.status == "parse":
-				self.parser.parse(self.get_page())
-			if self.status == "stop":
+			if self.status == "stop" :
 				self.quit()
+				break
+			while True:
+				try:
+					action[2](self.driver.find_element(action[0], action[1]))
+					action[3](self)
+				except:
+					self.status = "stop"
+				print("Status: " + self.status)
+				print("Redo: " + str(self.redo))
+				if self.status == "parse":
+					self.parser.parse(self.get_page_s())
+				if self.status == "stop":
+					self.redo = False
+				if not self.redo:
+					break
 	def switch_status(self, status):
 		self.status = status
+	def switch_redo(self, redo):
+		self.redo = redo
 	def cookies(self):
 		for cookie in self.driver.get_cookies():
 			print(cookie)

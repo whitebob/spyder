@@ -16,7 +16,6 @@ def myworker(url, actions, parser_pattern):
 if __name__=="__main__":
 	t = Task()
 	t.load('data/task.json')
-
 	m = Manager(3, myworker, t.get())
 	m.run()
 	m.join()

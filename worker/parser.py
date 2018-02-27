@@ -13,27 +13,25 @@ class BS4Parser(object):
 		except:
 			print("ancor not found!")
 			return
-		self.aims = []
+		#self.aims = []
 		print("Found "+str(len(entries))+" entries!")
 		for entry in entries:
 			data = {}
 			for (item, pattern) in self.item_patterns:
-				print("item:"+item)
-				print(pattern)
+				#print("item:"+item)
+				#print(pattern)
 				try:
 					data[item] = entry.find(**pattern).text
 				except:
 					print("No pattern in current entry")
 					continue
 			self.aims.append(data)
-		print(self.aims)
-	def save(self, file):
-		json.dump([(self.ancor, self.item_patterns)], open(file,'w'))
-	def load(self, file):
-		[(self.ancor, self.item_patterns)] = json.load(open(file, 'r'))
+			print(data)
+		#print(self.aims)
 	def get(self):
 		return self.aims
 	def output(self, file):
+		print(self.aims)
 		json.dump(self.aims, open(file,'w'))
 if __name__ == "__main__":
 	ancor = {"name" : "div", "class_" : "a-section review"}
@@ -41,7 +39,6 @@ if __name__ == "__main__":
 			 ("review_title", {"name": "a", "class_" :"a-size-base a-link-normal review-title a-color-base a-text-bold"})
 			]
 	a = BS4Parser(ancor, item_patterns)
-	a.save('../data/parser.json')
 	#b = BS4Parser(None, None)
 	#b.load('../data/parser.json')
 	#b.save('../data/parser2.json')
