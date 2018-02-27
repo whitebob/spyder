@@ -8,19 +8,33 @@ class BS4Parser(object):
 		self.aims = []
 	def parse(self, page):
 		self.soup = BeautifulSoup(page,"lxml")
-		entries = self.soup.find_all(**self.ancor)
-		aims = []
+		try:
+			entries = self.soup.find_all(**self.ancor)
+		except:
+			print("ancor not found!")
+			return
+		self.aims = []
+		print("Found "+str(len(entries))+" entries!")
 		for entry in entries:
 			data = {}
 			for (item, pattern) in self.item_patterns:
-				data[item] = entry.find(**pattern)
-			aims += data
+				print("item:"+item)
+				print(pattern)
+				try:
+					data[item] = entry.find(**pattern).text
+				except:
+					print("No pattern in current entry")
+					continue
+			self.aims.append(data)
+		print(self.aims)
 	def save(self, file):
 		json.dump([(self.ancor, self.item_patterns)], open(file,'w'))
 	def load(self, file):
 		[(self.ancor, self.item_patterns)] = json.load(open(file, 'r'))
 	def get(self):
 		return self.aims
+	def output(self, file):
+		json.dump(self.aims, open(file,'w'))
 if __name__ == "__main__":
 	ancor = {"name" : "div", "class_" : "a-section review"}
 	item_patterns = [("star", {"name" : "span", "class_" : "a-coin-alt"}),
