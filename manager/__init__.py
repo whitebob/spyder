@@ -1,1 +1,1 @@
-__all__ = ["threadmgr"]
+__all__ = ["threadmgr","simplemgr"]
