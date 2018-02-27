@@ -9,7 +9,7 @@ def myworker(url, actions, parser_pattern):
 	myparser = BS4Parser(**parser_pattern)
 	site = Spider(url, myparser) 
 	site.go(actions)
-	myparser.output('data/result.json')
+	myparser.output()
 	sleep(1)
 
 

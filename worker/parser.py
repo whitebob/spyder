@@ -1,11 +1,12 @@
 from  bs4  import BeautifulSoup
 import json
 class BS4Parser(object):
-	def __init__(self, ancor, item_patterns):
+	def __init__(self, ancor, item_patterns, output_file):
 		self.soup = None
 		self.ancor = ancor
 		self.item_patterns = item_patterns
 		self.aims = []
+		self.output_file = output_file
 	def parse(self, page):
 		self.soup = BeautifulSoup(page,"lxml")
 		try:
@@ -30,9 +31,9 @@ class BS4Parser(object):
 		#print(self.aims)
 	def get(self):
 		return self.aims
-	def output(self, file):
+	def output(self):
 		print(self.aims)
-		json.dump(self.aims, open(file,'w'))
+		json.dump(self.aims, open(self.output_file,'w'))
 if __name__ == "__main__":
 	ancor = {"name" : "div", "class_" : "a-section review"}
 	item_patterns = [("star", {"name" : "span", "class_" : "a-coin-alt"}),
