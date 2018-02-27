@@ -11,9 +11,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 class Spider(object):
 	def __init__(self, url, parser):
 		self.status = "ready"
-		options = WebDriver.ChromeOptions()
-		options.add_argument('headless')
-		self.driver = WebDriver.Chrome(chrome_options=options)
+	#	options = WebDriver.ChromeOptions()
+	#	options.add_argument('headless')
+	#	self.driver = WebDriver.Chrome(chrome_options=options)
+		self.driver = WebDriver.Chrome()
 		self.url = url
 		self.parser = parser
 		self.redo = False
@@ -22,7 +23,7 @@ class Spider(object):
 		self.status ="go"
 		for action in actions:
 			if self.status == "stop" :
-				self.quit()
+				#self.quit()
 				break
 			while True:
 				try:
@@ -69,16 +70,3 @@ def unserialize(serialized):
 		actions += [(m[0], m[1], str2lambda(m[2]), str2lambda(m[3]))]
 	return actions
 
-if __name__ == "__main__":
-	site = spider("http://www.google.com")
-	actions = [(By.NAME, "q", lambda o: o.send_keys("Faye"), lambda: sleep(1)),
-			(By.NAME, "btnK", lambda o: o.submit(), lambda: sleep(1) )]
-	#site.go(actions)
-	#site.cookies()
-	sa = serialize(actions)
-	json.dump(sa, open('a.json','w'))
-	sb = json.load(open('a.json','r'))
-	deacs = unserialize(sb)
-	site.go(deacs)
-	sleep(10)
-	site.quit()

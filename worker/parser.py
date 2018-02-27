@@ -34,12 +34,3 @@ class BS4Parser(object):
 	def output(self):
 		print(self.aims)
 		json.dump(self.aims, open(self.output_file,'w'))
-if __name__ == "__main__":
-	ancor = {"name" : "div", "class_" : "a-section review"}
-	item_patterns = [("star", {"name" : "span", "class_" : "a-coin-alt"}),
-			 ("review_title", {"name": "a", "class_" :"a-size-base a-link-normal review-title a-color-base a-text-bold"})
-			]
-	a = BS4Parser(ancor, item_patterns)
-	#b = BS4Parser(None, None)
-	#b.load('../data/parser.json')
-	#b.save('../data/parser2.json')
