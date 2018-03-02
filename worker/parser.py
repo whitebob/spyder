@@ -19,10 +19,16 @@ class BS4Parser(object):
 		for entry in entries:
 			data = {}
 			for (item, pattern) in self.item_patterns:
-				#print("item:"+item)
-				#print(pattern)
+				print("item:"+item)
+				print(pattern)
 				try:
-					data[item] = entry.find(**pattern).text
+					if pattern["name"] == "a": 
+						data[item + "_text"] = entry.find(**pattern).text
+						data[item + "_link"] = entry.find(**pattern)['href']
+					elif pattern["name"] == "div":
+							data[item] = entry.find(**pattern).prettify()
+					else:
+						data[item] = entry.find(**pattern).text
 				except:
 					print("No pattern in current entry")
 					continue

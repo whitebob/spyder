@@ -11,9 +11,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 class Spider(object):
 	def __init__(self, url, parser):
 		self.status = "ready"
-	#	options = WebDriver.ChromeOptions()
-	#	options.add_argument('headless')
-	#	self.driver = WebDriver.Chrome(chrome_options=options)
+		#options = WebDriver.ChromeOptions()
+		#options.add_argument('headless')
+		#self.driver = WebDriver.Chrome(chrome_options=options)
 		self.driver = WebDriver.Chrome()
 		self.url = url
 		self.parser = parser
@@ -29,8 +29,11 @@ class Spider(object):
 				try:
 					action[2](self.driver.find_element(action[0], action[1]))
 					action[3](self)
+					print("Found "+action[0]+":"+action[1]+"! and success command executed.")
 				except:
 					self.status = "stop"
+					action[4](self)
+					print(action[0]+":"+action[1]+" not found! and failure command executed.")
 				print("Status: " + self.status)
 				print("Redo: " + str(self.redo))
 				if self.status == "parse":
@@ -52,7 +55,10 @@ class Spider(object):
 		return self.driver.page_source
 	def quit(self):
 		self.driver.quit()
-
+	def scroll_down(self):
+		self.driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
+	def switch_tab(self):
+		self.driver.switch_to.window(self.driver.window_handles[1])
 def lambda2str(expr):
 	return base64.encodebytes(marshal.dumps(expr.__code__)).decode('ascii')
 def str2lambda(strs):
@@ -61,12 +67,12 @@ def str2lambda(strs):
 def serialize(actions):
 	serialized = []
 	for m in actions:
-		serialized += [(m[0], m[1], lambda2str(m[2]), lambda2str(m[3]))]
+		serialized += [(m[0], m[1], lambda2str(m[2]), lambda2str(m[3]), lambda2str(m[4]))]
 	return serialized
 
 def unserialize(serialized):
 	actions = []
 	for m in serialized:
-		actions += [(m[0], m[1], str2lambda(m[2]), str2lambda(m[3]))]
+		actions += [(m[0], m[1], str2lambda(m[2]), str2lambda(m[3]), str2lambda(m[4]))]
 	return actions
 

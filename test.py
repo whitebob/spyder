@@ -1,8 +1,8 @@
 from worker.parser import BS4Parser
 from worker.spider import Spider 
 from worker.task import Task 
-#from manager.threadmgr import ThreadManager as Manager
-from manager.simplemgr import SimpleManager as Manager
+from manager.threadmgr import ThreadManager as Manager
+#from manager.simplemgr import SimpleManager as Manager
 from time import sleep
 
 def myworker(url, actions, parser_pattern):
@@ -10,7 +10,7 @@ def myworker(url, actions, parser_pattern):
 	site = Spider(url, myparser) 
 	site.go(actions)
 	myparser.output()
-	sleep(1)
+	sleep(3)
 
 
 if __name__=="__main__":
