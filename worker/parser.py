@@ -1,12 +1,14 @@
 from  bs4  import BeautifulSoup
 import json
+from pymongo import MongoClient as Client
+
 class BS4Parser(object):
-	def __init__(self, ancor, item_patterns, output_file):
+	def __init__(self, ancor, item_patterns, output_params):
 		self.soup = None
 		self.ancor = ancor
 		self.item_patterns = item_patterns
 		self.aims = []
-		self.output_file = output_file
+		self.output_params = output_params
 	def parse(self, page):
 		self.soup = BeautifulSoup(page,"lxml")
 		try:
@@ -33,8 +35,9 @@ class BS4Parser(object):
 							data[item] = entry.find(**pattern)[method[1]]
 						elif m == "pretty":
 							data[item] = entry.find(**pattern).prettify()
-						elif m == "custom":
-							data[item] = method[1](entry.find(**pattern).string)
+						#need serializatoin for lambda expression
+						#elif m == "custom":
+						#	data[item] = method[1](entry.find(**pattern).string)
 						else:
 							data[item] = entry.find(**pattern).text
 					except:
@@ -52,5 +55,23 @@ class BS4Parser(object):
 	def get(self):
 		return self.aims
 	def output(self):
-		print(self.aims)
-		json.dump(self.aims, open(self.output_file,'w'))
+		if not self.output_params:
+			print(self.aims)
+		elif self.output_params.get('output_file'):
+			try:	
+				print("Output to file"+self.output_params['output_file'])
+				result = {}
+				result[self.output_params['output_name']] = self.aims
+				json.dump(result, open(self.output_params['output_file'],'w'))
+			except:
+				print("Error on json dump")
+		elif self.output_params.get('output_db'):
+			try:	
+				db = Client(**self.output_params['output_db']).spyder
+				collection = db[self.output_params['output_name']]
+				collection.insert_many(self.aims)
+			except:
+				print("Error on db output")
+		else:
+			print("No valid output parameters found!")
+

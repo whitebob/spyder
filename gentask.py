@@ -45,9 +45,11 @@ if __name__ == "__main__":
 	ancor = {"name" : "div", "class_": "item"}
 	item_patterns = [("price", {"name" : "strong"}),
 			 ("count", {"name": "div", "class_" :"deal-cnt"}),
-			 ("shopname", {"name": "a", "class_" :"shopname"})
+			 ("shopname", {"name": "a", "class_" :"shopname"}),
+			 ("shoplink", {"name": "a", "class_" :"shopname"}, "href")
 			]
-	parser_pattern = {"ancor":ancor, "item_patterns":item_patterns, "output_file":'data/wavebetter_links.json'}
+	#parser_pattern = {"ancor":ancor, "item_patterns":item_patterns, "output_params":{"output_file":"data/wavebetter_links.json", "output_name":"wavebetter"}}
+	parser_pattern = {"ancor":ancor, "item_patterns":item_patterns, "output_params":{"output_db":{"host":"127.0.0.1", "port":27017}, "output_name":"wavebetter"}}
 	a = Task()
 	a.add(url, actions, parser_pattern)
 	a.save('data/task.json')
